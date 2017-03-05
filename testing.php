@@ -21,8 +21,9 @@ $data = array(
 $request = $client->post('api/programmers', null, json_encode($data));
 $response = $request->send();
 
-$request = $client->get('/api/programmers/55555'.$nickname);
+$url = $response->getHeader('Location');
+$request = $client->get($url);
 $response = $request->send();
 
 echo $response;
-echo "\n\n";
+echo PHP_EOL.PHP_EOL;git
