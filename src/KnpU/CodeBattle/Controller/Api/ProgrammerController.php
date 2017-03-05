@@ -13,7 +13,13 @@ class ProgrammerController extends BaseController
 {
     protected function addRoutes(ControllerCollection $controllers)
     {
-        // $controllers->post('/api/programmers', array($this, 'newAction'));
+        $controllers->post('/api/programmers', array($this, 'newAction'));
     }
+
+    public function newAction(){
+        return 'let\'s Battle!';
+    }
+
+
 
 }
