@@ -25,5 +25,8 @@ $url = $response->getHeader('Location');
 $request = $client->get($url);
 $response = $request->send();
 
+$request = $client->get('api/programmers');
+$response = $request->send();
+
 echo $response;
-echo PHP_EOL.PHP_EOL;git
+echo PHP_EOL.PHP_EOL;
