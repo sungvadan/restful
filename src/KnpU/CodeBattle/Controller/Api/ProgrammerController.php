@@ -52,7 +52,7 @@ class ProgrammerController extends BaseController
         }
         $data = $this->serializeProgrammer($programmer);
 
-        $response = new JsonResponse($data, 201);
+        $response = new JsonResponse($data, 200);
         return $response;
 
     }
