@@ -53,7 +53,7 @@ Feature: Programmer
     And I have the payload:
       """
         {
-          "nickname": "CowboyCoder",
+          "nickname": "CowGirlCoder",
           "avatarNumber" : "2",
           "tagLine": "foo"
         }
@@ -62,3 +62,4 @@ Feature: Programmer
     And print last response
     Then the response status code should be 200
     And the "avatarNumber" property should equal "2"
+    And the "nickname" property should equal "CowboyCoder"
