@@ -46,6 +46,8 @@ class ProgrammerController extends BaseController
 
     public function updateAction(Request $request, $nickname)
     {
+        throw new \Exception('debugging');
+
         $programmer = $this->getProgrammerRepository()->findOneByNickname($nickname);
         if(!$programmer){
             $this->throw404('Crap! This programmer has deserted! We\'ll send a search party');
