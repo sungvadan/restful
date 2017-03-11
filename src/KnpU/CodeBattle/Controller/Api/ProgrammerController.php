@@ -23,15 +23,9 @@ class ProgrammerController extends BaseController
 
     public function newAction(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
-
         $programmer = new Programmer();
-        $programmer->nickname = $data['nickname'];
-        $programmer->avatarNumber = $data['avatarNumber'];
-        $programmer->tagLine = $data['tagLine'];
-        $programmer->userId = $this->findUserByUsername('weaverryan')->id;
 
-        $this->save($programmer);
+        $this->handleRequest($request, $programmer);
 
         $data = $this->serializeProgrammer($programmer);
         $response = new JsonResponse($data, 201);
@@ -46,21 +40,13 @@ class ProgrammerController extends BaseController
 
     public function updateAction(Request $request, $nickname)
     {
-        throw new \Exception('debugging');
 
         $programmer = $this->getProgrammerRepository()->findOneByNickname($nickname);
         if(!$programmer){
             $this->throw404('Crap! This programmer has deserted! We\'ll send a search party');
         }
 
-        $data = json_decode($request->getContent(), true);
-
-        $programmer->nickname = $data['nickname'];
-        $programmer->avatarNumber = $data['avatarNumber'];
-        $programmer->tagLine = $data['tagLine'];
-        $programmer->userId = $this->findUserByUsername('weaverryan')->id;
-
-        $this->save($programmer);
+        $this->handleRequest($request, $programmer);
 
         $data = $this->serializeProgrammer($programmer);
         $response = new JsonResponse($data, 200);
@@ -101,6 +87,23 @@ class ProgrammerController extends BaseController
             'powerLevel' => $programmer->powerLevel,
             'tagLine' => $programmer->tagLine,
         );
+    }
+
+    private function handleRequest(Request $request, Programmer $programmer)
+    {
+        $data = json_decode($request->getContent(), true);
+        if($data === null){
+            throw new \Exception('Invalid JSON!!!!!' .$request->getContent());
+        }
+        $apiProperties = array('nickname', 'avatarNumber', 'tagLine');
+        foreach ($apiProperties as $property){
+            $val = isset($data[$property])? $data[$property] : null;
+            $programmer->$property = $val;
+        }
+        $programmer->userId = $this->findUserByUsername('weaverryan')->id;
+
+        $this->save($programmer);
+
     }
 
 }
