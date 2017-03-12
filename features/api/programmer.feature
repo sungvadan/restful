@@ -63,3 +63,10 @@ Feature: Programmer
     Then the response status code should be 200
     And the "avatarNumber" property should equal "2"
     And the "nickname" property should equal "CowboyCoder"
+
+  Scenario: Delete a programmer
+    Given the following programmers exist:
+      | nickname    | avatarNumber | tagLine
+      | CowboyCoder | 3            | foo
+    When I request "DELETE /api/programmers/CowboyCoder"
+    Then the response status code should be 204
