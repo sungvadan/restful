@@ -118,4 +118,11 @@ Feature: Programmer
     When I request "POST /api/programmers"
     Then the response status code should be 400
     And the "Content-type" header should be "application/problem+json"
-    And the "type" property should equal "invalid_body_format"
+    And the "type" property should contain "invalid_body_format"
+
+  Scenario: Proper 404 exception on no programmer
+    When I request "GET /api/programmers/fake"
+    Then the response status code should be 404
+    And the "Content-type" header should be "application/problem+json"
+    And the "type" property should equal "about:blank"
+    And the "title" property should equal "Not Found"
