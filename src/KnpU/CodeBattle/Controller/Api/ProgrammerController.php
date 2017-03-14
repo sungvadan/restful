@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use KnpU\CodeBattle\Model\Programmer;
-
+use KnpU\CodeBattle\Api\ApiProblem;
 class ProgrammerController extends BaseController
 {
     protected function addRoutes(ControllerCollection $controllers)
@@ -139,12 +139,16 @@ class ProgrammerController extends BaseController
     }
 
     private function handleValidationResponse(array $errors){
-        $data = array(
-            'type' => 'validation_error',
-            'title' => 'There was a validation error',
-            'errors' => $errors
+        $apiProblem = new ApiProblem(
+            400,
+            ApiProblem::TYPE_VALIDATION_ERROR
         );
-        $response = new JsonResponse($data, 400);
+        $apiProblem->set('errors', $errors);
+
+        $response = new JsonResponse(
+            $apiProblem->toArray(),
+            $apiProblem->getStatusCode()
+        );
         $response->headers->set('Content-Type', 'application/problem+json');
         return $response;
     }
