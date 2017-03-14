@@ -86,3 +86,22 @@ Feature: Programmer
     And the "avatarNumber" property should equal "5"
     And the "nickname" property should equal "CowboyCoder"
     And the "tagLine" property should equal "giddyup"
+
+  Scenario: Validation Errors
+    Given I have the payload:
+      """
+        {
+          "avatarNumber" : "2",
+          "tagLine": "I'm from a test!"
+        }
+      """
+    When I request "POST /api/programmers"
+    Then the response status code should be 400
+    And the following properties should exist:
+      """
+      type
+      title
+      errors
+      """
+    And the "errors.nickname" property should exist
+    And the "errors.avatarNumber" property should not exist
