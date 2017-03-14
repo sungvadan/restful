@@ -106,3 +106,16 @@ Feature: Programmer
     And the "errors.nickname" property should exist
     And the "errors.avatarNumber" property should not exist
     And the "Content-type" header should be "application/problem+json"
+
+  Scenario: Error response on invalid JSON
+    Given I have the payload:
+      """
+        {
+          "avatarNumber" : "2
+          "tagLine": "I'm from a test!"
+        }
+      """
+    When I request "POST /api/programmers"
+    Then the response status code should be 400
+    And the "Content-type" header should be "application/problem+json"
+    And the "type" property should equal "invalid_body_format"
