@@ -49,4 +49,12 @@ class ApiProblem
     {
         return $this->statusCode;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
 }

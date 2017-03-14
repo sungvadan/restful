@@ -2,6 +2,7 @@
 
 namespace KnpU\CodeBattle\Controller\Api;
 
+use KnpU\CodeBattle\Api\ApiProblemException;
 use KnpU\CodeBattle\Controller\BaseController;
 use Silex\Application;
 use Silex\ControllerCollection;
@@ -32,7 +33,7 @@ class ProgrammerController extends BaseController
         $this->handleRequest($request, $programmer);
         $errors = $this->validate($programmer);
         if(!empty($errors)){
-            return $this->handleValidationResponse($errors);
+            $this->throwApiProblemValidationException($errors);
         }
         $this->save($programmer);
 
@@ -58,7 +59,7 @@ class ProgrammerController extends BaseController
         $this->handleRequest($request, $programmer);
         $errors = $this->validate($programmer);
         if(!empty($errors)){
-            return $this->handleValidationResponse($errors);
+            $this->throwApiProblemValidationException($errors);
         }
         $this->save($programmer);
 
@@ -120,7 +121,7 @@ class ProgrammerController extends BaseController
         $data = json_decode($request->getContent(), true);
         if($data === null){
             $apiProblem = new ApiProblem(400, ApiProblem::TYPE_INVALID_REQUEST_BODY_FORMAT);
-            throw new HttpException(400,'Invalid JSON!!!!!');
+            throw new ApiProblemException($apiProblem);
         }
         $isNew = !$programmer->id;
 
@@ -140,19 +141,13 @@ class ProgrammerController extends BaseController
 
     }
 
-    private function handleValidationResponse(array $errors){
+    private function throwApiProblemValidationException(array $errors){
         $apiProblem = new ApiProblem(
             400,
             ApiProblem::TYPE_VALIDATION_ERROR
         );
         $apiProblem->set('errors', $errors);
-
-        $response = new JsonResponse(
-            $apiProblem->toArray(),
-            $apiProblem->getStatusCode()
-        );
-        $response->headers->set('Content-Type', 'application/problem+json');
-        return $response;
+        throw new ApiProblemException($apiProblem);
     }
 
 }
