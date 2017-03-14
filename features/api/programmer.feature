@@ -105,3 +105,4 @@ Feature: Programmer
       """
     And the "errors.nickname" property should exist
     And the "errors.avatarNumber" property should not exist
+    And the "Content-type" header should be "application/problem+json"
