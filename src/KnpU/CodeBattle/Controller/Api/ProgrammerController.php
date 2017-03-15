@@ -37,8 +37,8 @@ class ProgrammerController extends BaseController
         }
         $this->save($programmer);
 
-        $data = $this->serializeProgrammer($programmer);
-        $response = new JsonResponse($data, 201);
+        $json = $this->serialize($programmer);
+        $response = new Response($json, 201);
 
         $url = $this->generateUrl('api_programmers_show',array(
             'nickname' => $programmer->nickname
@@ -63,8 +63,8 @@ class ProgrammerController extends BaseController
         }
         $this->save($programmer);
 
-        $data = $this->serializeProgrammer($programmer);
-        $response = new JsonResponse($data, 200);
+        $json = $this->serialize($programmer);
+        $response = new Response($json, 200);
 
         return $response;
     }
@@ -75,9 +75,9 @@ class ProgrammerController extends BaseController
         if(!$programmer){
             $this->throw404('Crap! This programmer has deserted! We\'ll send a search party');
         }
-        $data = $this->serializeProgrammer($programmer);
+        $json = $this->serialize($programmer);
 
-        $response = new JsonResponse($data, 200);
+        $response = new Response($json, 200);
         return $response;
 
     }
@@ -97,23 +97,16 @@ class ProgrammerController extends BaseController
     public function listAction()
     {
         $programmers = $this->getProgrammerRepository()->findAll();
-        $data = array('programmers' => array());
-        foreach ($programmers as $programmer){
-            $data['programmers'][] = $this->serializeProgrammer($programmer);
-        }
-        $response = new JsonResponse($data, 200);
+        $data = array('programmers' => $programmers);
+        $json = $this->serialize($data);
+        $response = new Response($json, 200);
         return $response;
 
     }
 
-    private function serializeProgrammer(Programmer $programmer)
+    private function serialize($data)
     {
-        return array(
-            'nickname' => $programmer->nickname,
-            'avatarNumber' => $programmer->avatarNumber,
-            'powerLevel' => $programmer->powerLevel,
-            'tagLine' => $programmer->tagLine,
-        );
+        return $this->container['serializer']->serialize($data,'json');
     }
 
     private function handleRequest(Request $request, Programmer $programmer)
