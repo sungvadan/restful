@@ -33,6 +33,7 @@ use KnpU\CodeBattle\Battle\BattleManager;
 use Silex\Provider\ValidatorServiceProvider;
 use Symfony\Component\Validator\Mapping\ClassMetadataFactory;
 use Symfony\Component\Validator\Mapping\Loader\AnnotationLoader;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Application extends SilexApplication
 {
@@ -294,10 +295,16 @@ class Application extends SilexApplication
             if(strpos($app['request']->getPathInfo(),'/api')!==0){
                 return;
             }
+            if($app['debug'] && $statusCode ==  500){
+                return;
+            }
             if($e instanceof ApiProblemException){
                 $apiProblem = $e->getApiProblem();
             }else{
                 $apiProblem = new ApiProblem($statusCode);
+                if ($e instanceof HttpException) {
+                    $apiProblem->set('detail', $e->getMessage());
+                }
             }
 
             $data = $apiProblem->toArray();

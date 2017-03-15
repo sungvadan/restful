@@ -126,3 +126,4 @@ Feature: Programmer
     And the "Content-type" header should be "application/problem+json"
     And the "type" property should equal "about:blank"
     And the "title" property should equal "Not Found"
+    And the "detail" property should contain "This programmer has deserted!"
