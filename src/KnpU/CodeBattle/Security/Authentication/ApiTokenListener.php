@@ -43,7 +43,7 @@ class ApiTokenListener implements ListenerInterface
         if (!$request->headers->has('Authorization')) {
             return;
         }
-        
+
         // format should be "Authorization: token ABCDEFG"
         $authorizationHeader = $request->headers->get('Authorization');
         $tokenString = $this->parseAuthorizationHeader($authorizationHeader);
