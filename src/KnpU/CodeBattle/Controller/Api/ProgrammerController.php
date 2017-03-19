@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use KnpU\CodeBattle\Model\Programmer;
 use KnpU\CodeBattle\Api\ApiProblem;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
 class ProgrammerController extends BaseController
 {
     protected function addRoutes(ControllerCollection $controllers)
@@ -28,6 +30,9 @@ class ProgrammerController extends BaseController
 
     public function newAction(Request $request)
     {
+        if(!$this->getLoggedInUser()){
+            throw  new AccessDeniedException();
+        }
         $programmer = new Programmer();
 
         $this->handleRequest($request, $programmer);
