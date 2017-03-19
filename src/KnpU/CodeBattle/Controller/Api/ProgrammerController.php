@@ -135,7 +135,8 @@ class ProgrammerController extends BaseController
             $val = isset($data[$property])? $data[$property] : null;
             $programmer->$property = $val;
         }
-        $programmer->userId = $this->findUserByUsername('weaverryan')->id;
+        $programmer->userId = $this->getLoggedInUser()->id;
+
 
     }
 
