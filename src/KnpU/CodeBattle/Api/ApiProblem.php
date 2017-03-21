@@ -66,4 +66,5 @@ class ApiProblem
     {
         return $this->title;
     }
+
 }
