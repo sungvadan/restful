@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use KnpU\CodeBattle\Model\Programmer;
 use KnpU\CodeBattle\Api\ApiProblem;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
 class ProgrammerController extends BaseController
 {
     protected function addRoutes(ControllerCollection $controllers)
@@ -28,6 +30,7 @@ class ProgrammerController extends BaseController
 
     public function newAction(Request $request)
     {
+        $this->enforceUserSecurity();
         $programmer = new Programmer();
 
         $this->handleRequest($request, $programmer);
@@ -51,6 +54,7 @@ class ProgrammerController extends BaseController
     {
 
         $programmer = $this->getProgrammerRepository()->findOneByNickname($nickname);
+        $this->enforceProgrammerOwnershipSecurity($programmer);
         if(!$programmer){
             $this->throw404('Crap! This programmer has deserted! We\'ll send a search party');
         }
@@ -84,6 +88,7 @@ class ProgrammerController extends BaseController
     public function deleteAction($nickname)
     {
         $programmer = $this->getProgrammerRepository()->findOneByNickname($nickname);
+        $this->enforceProgrammerOwnershipSecurity($programmer);
         if ($programmer) {
             $this->delete($programmer);
         }
@@ -124,7 +129,8 @@ class ProgrammerController extends BaseController
             $val = isset($data[$property])? $data[$property] : null;
             $programmer->$property = $val;
         }
-        $programmer->userId = $this->findUserByUsername('weaverryan')->id;
+        $programmer->userId = $this->getLoggedInUser()->id;
+
 
     }
 
