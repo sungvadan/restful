@@ -20,7 +20,11 @@ class TokenController extends BaseController
         $this->enforceUserSecurity();
         $data = $this->decodeRequestBodyIntoParameters($request);
         $token = new ApiToken($this->getLoggedInUser()->id);
-        $token->notes = $data->get('notes','default notes');
+        $token->notes = $data->get('notes');
+        $errors = $this->validate($token);
+        if(!empty($errors)){
+            $this->throwApiProblemValidationException($errors);
+        }
         $this->getApiTokenRepository()->save($token);
         return $this->createApiResponse($token, 201);
     }
