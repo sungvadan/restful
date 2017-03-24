@@ -3,9 +3,13 @@ Feature:
   As an API client
   I need to be able to create and view battles
 
+  Background:
+    Given the user "weaverryan" exists
+    And "weaverryan" has an authentication token "ABCD123"
+    And I set the "Authorization" header to be "token ABCD123"
+
   Scenario: Creating a new battle
     Given there is a project called "my_project"
-    And there is a user "weaverryan" with password "test"
     And there is a programmer called "Fred"
     And I have the payload:
      """
