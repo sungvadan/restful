@@ -110,11 +110,7 @@ class ProgrammerController extends BaseController
 
     private function handleRequest(Request $request, Programmer $programmer)
     {
-        $data = json_decode($request->getContent(), true);
-        if($data === null){
-            $apiProblem = new ApiProblem(400, ApiProblem::TYPE_INVALID_REQUEST_BODY_FORMAT);
-            throw new ApiProblemException($apiProblem);
-        }
+        $data = $this->decodeRequestBodyIntoParameters($request);
         $isNew = !$programmer->id;
 
         $apiProperties = array('avatarNumber', 'tagLine');
@@ -123,11 +119,10 @@ class ProgrammerController extends BaseController
         }
         foreach ($apiProperties as $property){
             // if a property is missing on PATCH, that's ok - just skip it
-            if(!isset($data[$property]) && $request->isMethod('PATCH')){
+            if(!$data->has($property) && $request->isMethod('PATCH')){
                 continue;
             }
-            $val = isset($data[$property])? $data[$property] : null;
-            $programmer->$property = $val;
+            $programmer->$property = $data->get($property);
         }
         $programmer->userId = $this->getLoggedInUser()->id;
 
