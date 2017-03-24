@@ -34,5 +34,6 @@ Feature:
       didProgrammerWin
       notes
       """
+    And the "programmerUri" property should equal "/api/programmers/Fred"
 
 
