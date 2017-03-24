@@ -14,6 +14,7 @@ class BattleController extends BaseController
 {
     protected function addRoutes(ControllerCollection $controllers){
         $controllers->post('/api/battles',array($this, 'newAction'));
+        $controllers->get('/api/battles/{id}',array($this, 'showAction'));
     }
 
     public function newAction(Request $request)
@@ -42,6 +43,15 @@ class BattleController extends BaseController
         $response->headers->set('Location','Todo');
         return$response;
     }
+
+    public function showAction($id){
+        $battle = $this->getBattleRepository()->find($id);
+        if(!$battle){
+            $this->throw404('No battle found for id '.$id);
+        }
+        return $this->createApiResponse($battle);
+    }
+
 
 
 }

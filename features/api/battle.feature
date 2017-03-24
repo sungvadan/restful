@@ -22,5 +22,17 @@ Feature:
     Then the response status code should be 201
     And the "Location" header should exist
     And the "didProgrammerWin" property should exist
+    
+  Scenario: Getting a single battle
+    Given there is a programmer called "Fred"
+    And there is a project called "project_facebook"
+    And there has been a battle between "Fred" and "project_facebook"
+    When I request "GET /api/battles/%battles.last.id%"
+    Then the response status code should be 200
+    And the following properties should exist:
+      """
+      didProgrammerWin
+      notes
+      """
 
 
