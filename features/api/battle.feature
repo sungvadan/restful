@@ -35,5 +35,6 @@ Feature:
       notes
       """
     And the "programmerUri" property should equal "/api/programmers/Fred"
+    And print last response
 
 
