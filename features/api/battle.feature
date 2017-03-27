@@ -37,6 +37,8 @@ Feature:
     # And the "_links.programmer.href" property should equal "/api/programmers/Fred"
     And the link "programmer" should exist and its value should be "/api/programmers/Fred"
     And the "Content-Type" header should be "application/hal+json"
-    # And print last response
+    And the "_embedded.programmer.nickname" property should equal "Fred"
+    And the embedded "programmer" should have a "nickname" property equal to "Fred"
+    #And print last response
 
 
