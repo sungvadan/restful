@@ -27,6 +27,26 @@ class ProgrammerController extends BaseController
         $controllers->match('/api/programmers/{nickname}', array($this, 'updateAction'))
             ->method('PATCH');
         $controllers->delete('/api/programmers/{nickname}', array($this, 'deleteAction'));
+        $controllers->get('/api/programmers/{nickname}/battles', array($this, 'listBattlesAction'))
+            ->bind('api_programmers_battles_list');
+    }
+
+    public function listBattlesAction($nickname)
+    {
+        $programmer = $this->getProgrammerRepository()->findOneByNickname($nickname);
+        if (!$programmer) {
+            $this->throw404('Oh no! This programmer has deserted! We\'ll send a search party!');
+        }
+
+        $battles = $this->getBattleRepository()
+            ->findAllBy(array('programmerId' => $programmer->id));
+        $collection = new CollectionRepresentation(
+            $battles,
+            'battles'
+        );
+        $response = $this->createApiResponse($collection,200);
+        return $response;
+
     }
 
     public function newAction(Request $request)

@@ -17,6 +17,15 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *     ),
  *     embedded="expr(object.programmer)"
  * )
+ * @Hateoas\Relation(
+ *     "self",
+ *      href = @Hateoas\Route(
+ *          "api_battle_show",
+ *          parameters = {
+ *              "id" = "expr(object.id)"
+ *          }
+ *     ),
+ * )
  */
 class Battle
 {
