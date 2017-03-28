@@ -2,6 +2,7 @@
 
 namespace KnpU\CodeBattle\Controller\Api;
 
+use Hateoas\Representation\CollectionRepresentation;
 use KnpU\CodeBattle\Api\ApiProblemException;
 use KnpU\CodeBattle\Controller\BaseController;
 use Silex\Application;
@@ -101,8 +102,11 @@ class ProgrammerController extends BaseController
     public function listAction()
     {
         $programmers = $this->getProgrammerRepository()->findAll();
-        $data = array('programmers' => $programmers);
-        $response = $this->createApiResponse($data,200);
+        $collection = new CollectionRepresentation(
+            $programmers,
+            'programmers'
+        );
+        $response = $this->createApiResponse($collection,200);
         return $response;
 
     }
