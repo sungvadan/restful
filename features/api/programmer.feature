@@ -54,6 +54,29 @@ Feature: Programmer
     And the "_embedded.programmers.0.nickname" property should equal "UnitTester"
     And print last response
 
+  # 5 per page
+  Scenario: I am able to paginate through the programmer ressources
+    Given the following programmers exist:
+      | nickname      | avatarNumber |
+      | CowboyCoder1  | 5            |
+      | CowboyCoder2  | 5            |
+      | CowboyCoder3  | 5            |
+      | CowboyCoder4  | 5            |
+      | CowboyCoder5  | 5            |
+      | CowboyCoder6  | 5            |
+      | CowboyCoder7  | 5            |
+      | CowboyCoder8  | 5            |
+      | CowboyCoder9  | 5            |
+      | CowboyCoder10 | 5            |
+      | CowboyCoder11 | 5            |
+      | CowboyCoder12 | 5            |
+    When I request "GET /api/programmers"
+    And I follow the "next" link
+    And the "_embedded.programmers" property should contain "CowboyCoder7"
+    And the "_embedded.programmers" property should not contain "CowboyCoder2"
+    And the "_embedded.programmers" property should not contain "CowboyCoder11"
+    And print last response
+
   Scenario: GET a collection of battles for a programmer
     Given there is a project called "projectA"
     And there is a project called "projectB"

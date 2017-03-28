@@ -3,6 +3,7 @@
 namespace KnpU\CodeBattle\Controller\Api;
 
 use Hateoas\Representation\CollectionRepresentation;
+use Hateoas\Representation\PaginatedRepresentation;
 use KnpU\CodeBattle\Api\ApiProblemException;
 use KnpU\CodeBattle\Controller\BaseController;
 use KnpU\CodeBattle\Model\Hompage;
@@ -128,14 +129,28 @@ class ProgrammerController extends BaseController
 
     }
 
-    public function listAction()
+    public function listAction(Request $request)
     {
         $programmers = $this->getProgrammerRepository()->findAll();
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 5);
+        $offset = ($page - 1) * $limit;
+        $numberOfPages = ceil(count(($programmers))/$limit);
         $collection = new CollectionRepresentation(
-            $programmers,
+            array_slice($programmers, $offset, $limit),
             'programmers'
         );
-        $response = $this->createApiResponse($collection,200);
+
+        $paginated = new PaginatedRepresentation(
+            $collection,
+            'api_programmers_list',
+            array(),
+            $page,
+            $limit,
+            $numberOfPages
+        );
+        $response = $this->createApiResponse($paginated,200);
+
         return $response;
 
     }
